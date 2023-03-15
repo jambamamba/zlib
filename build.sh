@@ -26,12 +26,14 @@ function stripArchive(){
 function package(){
     local artifacts_url="/home/${USER}/Downloads"
     local target=""
+    local library="zlib"
 	parseArgs $@
 	local workdir=installs
 	mkdir -p "${workdir}"
     rm -fr ${workdir}/*
 
-	rsync -uav include "${workdir}/"
+	mkdir -p "${workdir}/${target}-build/include"
+	rsync -uav *.h "${workdir}/${target}-build/include/"
 	mkdir -p "${workdir}/${target}-build/lib"
     if [ "${target}" == "mingw" ]; then
         rsync -uav ${target}-build/lib*.dll* "${workdir}/${target}-build/lib/"
@@ -44,7 +46,7 @@ function package(){
     popd
 
     local SHA="$(sudo git config --global --add safe.directory .;sudo git rev-parse --verify --short HEAD)"
-    local output="openssl-${SHA}-${target}.tar.xz"
+    local output="${library}-${SHA}-${target}.tar.xz"
     tar -cvJf "${output}" "${workdir}"
 
     if [ "${artifacts_url:0:8}" == "https://" ]; then
@@ -99,6 +101,24 @@ function sourceToolchainsFile(){
     fi
 }
 
+function skipBuild(){
+    local target="x86"
+    parseArgs $@
+    local builddir="${target}-build"
+
+    if [ "$target" == "mingw" ] && \
+        [ -f "${builddir}/libzlib.dll" ]; then 
+        return 1
+    elif [ "$target" == "x86" ] && \
+        [ -f "${builddir}/libz.so.1.2.13" ]; then 
+        return 1
+    elif [ "$target" == "arm" ] && \
+        [ -f "${builddir}/libz.so.1.2.13" ]; then 
+        return 1
+    fi
+    return 0
+}
+
 function build(){
     local clean=""
     local target="x86"
@@ -112,20 +132,6 @@ function build(){
     if [ "$clean" == "true" ]; then
         rm -fr "${builddir}/*"
     fi
-
-    # if [ "$target" == "mingw" ] && \
-    #     [ -f "${builddir}/openssl/libssl-3-x64.dll" ] && \
-    #     [ -f "${builddir}/openssl/libcrypto-3-x64.dll" ]; then 
-    #     return
-    # elif [ "$target" == "x86" ] && \
-    #     [ -f "${builddir}/openssl/libssl.so.3" ] && \
-    #     [ -f "${builddir}/openssl/libcrypto.so.3" ]; then 
-    #     return
-    # elif [ "$target" == "arm" ] && \
-    #     [ -f "${builddir}/openssl/libssl.so.3" ] && \
-    #     [ -f "${builddir}/openssl/libcrypto.so.3" ]; then 
-    #     return
-    # fi
 
     local script_dir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
     export ZLIB_LIBRARY=${script_dir}
@@ -170,9 +176,11 @@ function build(){
 function main(){
     local cmake_toolchain_file=""
     local bash_toolchain_file=""
+    skipBuild $@
+
     sourceToolchainsFile $@ cmake_toolchain_file="" bash_toolchain_file=""
     build $@ cmake_toolchain_file="${cmake_toolchain_file}"
-    # package $@
+    package $@ library="zlib"
 }
 
 main $@
