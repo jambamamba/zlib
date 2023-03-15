@@ -24,3 +24,12 @@
 /configure.log
 
 .DS_Store
+
+# osm:
+arm-build/
+mingw-build/
+x86-build/
+x86_64-w64-mingw32.cmake
+x86_64-w64-mingw32.sh
+zconf.h.included
+
