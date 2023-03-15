@@ -32,16 +32,16 @@ function package(){
 	mkdir -p "${workdir}"
     rm -fr ${workdir}/*
 
-	mkdir -p "${workdir}/${target}-build/include"
-	rsync -uav *.h "${workdir}/${target}-build/include/"
-	mkdir -p "${workdir}/${target}-build/lib"
+	mkdir -p "${workdir}/include"
+	rsync -uav *.h "${workdir}/include/"
+	mkdir -p "${workdir}/lib"
     if [ "${target}" == "mingw" ]; then
-        rsync -uav ${target}-build/lib*.dll* "${workdir}/${target}-build/lib/"
+        rsync -uav ${target}-build/lib*.dll* "${workdir}/lib/"
     else
-        rsync -uav ${target}-build/lib*.so* "${workdir}/${target}-build/lib/"
+        rsync -uav ${target}-build/lib*.so* "${workdir}/lib/"
     fi
 
-    pushd "${workdir}/${target}-build/lib/"
+    pushd "${workdir}/lib/"
     stripArchive target="${target}"
     popd
 
