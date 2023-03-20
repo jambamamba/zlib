@@ -92,9 +92,17 @@ function build(){
 }
 
 function main(){
-    skip $@ library="zlib"
+    local library="zlib"
+    local target="x86"
+    parseArgs $@
+
+    skip $@ library="${library}"
     build $@
-    package $@ library="zlib"
+
+    local builddir="/tmp/${library}/${target}-build" # $(mktemp -d)/installs
+    copyBuildFilesToInstalls $@ builddir="${builddir}"
+    mv ${builddir}/installs/include/${target}-build/* ${builddir}/installs/include/
+    compressInstalls $@ builddir="${builddir}" library="${library}"
 }
 
-main $@
+time main $@
