@@ -77,7 +77,8 @@ function build(){
             -DCMAKE_INSTALL_PREFIX=../install-win \
             -G "Ninja" ..
     elif [ "$target" == "arm" ]; then
-        source "${SDK_DIR}/environment-setup-aarch64-fslc-linux"
+        #source "${SDK_DIR}/environment-setup-aarch64-fslc-linux"
+        source "${SDK_DIR}/environment-setup-cortexa72-oe-linux"
         cmake \
             -DBUILD_SHARED_LIBS=ON \
             -G "Ninja" ..
