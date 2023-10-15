@@ -75,17 +75,20 @@ function build(){
             -DCMAKE_FIND_ROOT_PATH=/usr/x86_64-w64-mingw32 \
             -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY \
             -DCMAKE_INSTALL_PREFIX=../install-win \
+            -DTARGET=${target} \
             -G "Ninja" ..
     elif [ "$target" == "arm" ]; then
         #source "${SDK_DIR}/environment-setup-aarch64-fslc-linux"
         source "${SDK_DIR}/environment-setup-cortexa72-oe-linux"
         cmake \
             -DBUILD_SHARED_LIBS=ON \
+            -DTARGET=${target} \
             -G "Ninja" ..
     elif [ "$target" == "x86" ]; then
 		export STRIP="$(which strip)"
         cmake \
             -DBUILD_SHARED_LIBS=ON \
+            -DTARGET=${target} \
             -G "Ninja" ..
     fi
     ninja
@@ -102,7 +105,7 @@ function main(){
 
     local builddir="/tmp/${library}/${target}-build" # $(mktemp -d)/installs
     copyBuildFilesToInstalls $@ builddir="${builddir}"
-    mv ${builddir}/installs/include/${target}-build/* ${builddir}/installs/include/
+    # mv ${builddir}/installs/include/${target}-build/* ${builddir}/installs/include/
     compressInstalls $@ builddir="${builddir}" library="${library}"
 }
 
