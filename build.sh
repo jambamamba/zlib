@@ -87,12 +87,17 @@ function build(){
     elif [ "$target" == "x86" ]; then
 		export STRIP="$(which strip)"
         cmake \
+            -DCMAKE_BUILD_TYPE=RelWithDebugInfo \
+            -DCMAKE_MODULE_PATH="/usr/local/cmake" \
+            -DCMAKE_PREFIX_PATH="/usr/local/cmake" \
             -DBUILD_SHARED_LIBS=ON \
             -DTARGET=${target} \
             -G "Ninja" ..
     fi
-    ninja
+    ninja -v
+    sudo ninja install package
     popd
+    sudo rm -fr /downloads/_CPack_Packages
 }
 
 function main(){
@@ -103,10 +108,10 @@ function main(){
     skip $@ library="${library}"
     build $@
 
-    local builddir="/tmp/${library}/${target}-build" # $(mktemp -d)/installs
-    copyBuildFilesToInstalls $@ builddir="${builddir}"
-    # mv ${builddir}/installs/include/${target}-build/* ${builddir}/installs/include/
-    compressInstalls $@ builddir="${builddir}" library="${library}"
+    # local builddir="/tmp/${library}/${target}-build" # $(mktemp -d)/installs
+    # copyBuildFilesToInstalls $@ builddir="${builddir}"
+    # # mv ${builddir}/installs/include/${target}-build/* ${builddir}/installs/include/
+    # compressInstalls $@ builddir="${builddir}" library="${library}"
 }
 
 time main $@

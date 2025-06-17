@@ -211,3 +211,16 @@ if(HAVE_OFF64_T)
     target_link_libraries(minigzip64 zlib)
     set_target_properties(minigzip64 PROPERTIES COMPILE_FLAGS "-D_FILE_OFFSET_BITS=64")
 endif()
+
+##################################
+#CMAKE INSTALL
+set(project "zlib")
+set(headers ${CMAKE_BINARY_DIR}/zconf.h ${CMAKE_SOURCE_DIR}/zlib.h)
+# message(FATAL_ERROR "headers: ${headers}")
+configure_file("${CMAKE_SOURCE_DIR}/share/cmake/scripts/my_install.cmake.in" "${CMAKE_BINARY_DIR}/install.cmake" @ONLY)
+include("${CMAKE_BINARY_DIR}/install.cmake")
+
+#################################
+#CMAKE CPACK
+configure_file("${CMAKE_SOURCE_DIR}/share/cmake/scripts/my_cpack.cmake.in" "${CMAKE_BINARY_DIR}/cpack.cmake" @ONLY)
+include("${CMAKE_BINARY_DIR}/cpack.cmake")
