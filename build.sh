@@ -95,9 +95,8 @@ function build(){
             -G "Ninja" ..
     fi
     ninja -v
-    sudo ninja install package
+    sudo ninja install && sudo chown $(id -u):$(id -g) install_manifest.txt
     popd
-    sudo rm -fr /downloads/_CPack_Packages
 }
 
 function main(){
@@ -107,11 +106,7 @@ function main(){
 
     skip $@ library="${library}"
     build $@
-
-    # local builddir="/tmp/${library}/${target}-build" # $(mktemp -d)/installs
-    # copyBuildFilesToInstalls $@ builddir="${builddir}"
-    # # mv ${builddir}/installs/include/${target}-build/* ${builddir}/installs/include/
-    # compressInstalls $@ builddir="${builddir}" library="${library}"
+    package $@ library="${library}"
 }
 
 time main $@
