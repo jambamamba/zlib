@@ -215,8 +215,7 @@ endif()
 ##################################
 #CMAKE INSTALL
 set(project "zlib")
-set(headers ${CMAKE_BINARY_DIR}/zconf.h ${CMAKE_SOURCE_DIR}/zlib.h)
-# message(FATAL_ERROR "headers: ${headers}")
+set(headers ${ZLIB_PUBLIC_HDRS}) #${CMAKE_BINARY_DIR}/zconf.h ${CMAKE_SOURCE_DIR}/zlib.h)
 configure_file("${CMAKE_SOURCE_DIR}/share/cmake/scripts/my_install.cmake.in" "${CMAKE_BINARY_DIR}/install.cmake" @ONLY)
 include("${CMAKE_BINARY_DIR}/install.cmake")
 
