@@ -105,7 +105,7 @@ function main(){
     local target="x86"
     parseArgs $@
 
-    skip $@ library="${library}"
+    # skip $@ library="${library}"
     build $@
     package $@ library="${library}"
 }
