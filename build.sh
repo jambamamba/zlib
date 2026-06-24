@@ -97,6 +97,9 @@ function build(){
     fi
     ninja # -v
     sudo ninja install && sudo chown $(id -u):$(id -g) install_manifest.txt
+    if [ "$target" == "x86" ]; then
+        sudo sed -i 's|libz.so.1\.2\.13|libz.so.1|g' /usr/local/cmake/zlib-config.cmake
+    fi
     popd
 }
 
