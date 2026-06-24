@@ -20,11 +20,11 @@ function skip(){
         [ -f "${builddir}/${package}" ]; then 
         return 1
     elif [ "$target" == "x86" ] && \
-        [ -f "${builddir}/libz.so.1.2.13" ] && \
+        [ -f "${builddir}/libz.so.1" ] && \
         [ -f "${builddir}/${package}" ]; then 
         return 1
     elif [ "$target" == "arm" ] && \
-        [ -f "${builddir}/libz.so.1.2.13" ] && \
+        [ -f "${builddir}/libz.so.1" ] && \
         [ -f "${builddir}/${package}" ]; then 
         return 1
     fi
