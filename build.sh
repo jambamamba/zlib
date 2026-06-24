@@ -108,6 +108,7 @@ function main(){
     # skip $@ library="${library}"
     build $@
     package $@ library="${library}"
+    updatepin library="zlib" 
 }
 
 time main $@
